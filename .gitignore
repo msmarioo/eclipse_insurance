@@ -23,3 +23,6 @@
 
 config/
 *.env
+
+# Python
+__pycache__/
