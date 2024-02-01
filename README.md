@@ -19,7 +19,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# Descristion
+# Description
 The [Eclipse SDV Blueprints](https://github.com/eclipse-sdv-blueprints) project is a collaborative initiative
 led by Eclipse SDV members to bring the *software defined vehicle* concepts to life.
 
