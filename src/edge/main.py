@@ -1,35 +1,44 @@
-# SPDX-FileCopyrightText: 2023 Contributors to the Eclipse Foundation
-#
-# See the NOTICE file(s) distributed with this work for additional
-##/ information regarding copyright ownership.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# SPDX-License-Identifier: Apache-2.0
-
 import argparse
 import csv
 
-import basic_threshold
+from event_detector import risk_event_detector
+import event_definitions
 
 
-# This script is a very basic simulation of the sequence of events to detect risk events in a vehicle.
+# This script is a very basic simulation of the seuence of events to detect risk events in a vehicle.
 # 
 # - Vehicle posts signal changes periodically, at a 10-100ms update rate.
 # - For each signal change, the risk event detectors are notified
 # - Risk event detectors will use the signal change to evaluate a risk event
 # - If a risk event is detected, a Risk Event is created and posted
 # - Risk event is transmitted to the cloud
+
+def setup_timeout_dict(event_list):
+    return {e.name:0 for e in event_list}
+    
+def setup_signal_dict(event_list):
+    relevant_signals = []
+    for event in event_list:
+        relevant_signals = relevant_signals + event.relevant_signals
+        relevant_signals = relevant_signals + list(event.eventData.keys())
+    relevant_signals = set(relevant_signals)
+    signal_dict = {}
+    for s in relevant_signals:
+        signal_dict[s] = []
+        # Alternative setup:
+        # signal_dict[s] = [np.nan]*hist_signals
+    return signal_dict
+
+def update_signal_value(signal_dict, signal, hist_signals):
+    signal_dict[signal.name].append(signal.value)
+    signal_dict[signal.name] = signal_dict[signal.name][-hist_signals:]
+    return signal_dict
+
+# Alternative setup:
+# def update_signal_value(signal_dict, signal):
+#     signal_dict[signal.name].append(signal.value)
+#     del signal_dict[signal.name][0]
+#     return signal_dict
 
 # Represents a vehicle signal.
 class Signal:
@@ -39,10 +48,6 @@ class Signal:
         self.value = value
         self.timestamp = timestamp
 
-riskEvenDetectortList = [
-    # Basic Threshold is a trivial, naive detector that just posts an event if a threshold on a signal is detected.
-    basic_threshold.risk_detector
-]
 
 # Here we will showcase the telemetry platform part - which is basically just serializing the risk event and sending it to the cloud
 def post(riskEvent):    
@@ -50,7 +55,7 @@ def post(riskEvent):
 
 # This is the callback from the risk event detectors
 def risk_event_callback(riskEvent):
-    print(f"Received a risk event {riskEvent.name} with risk level {riskEvent.riskLevel} and value {riskEvent.value}")
+    print(f"Received a risk event {riskEvent.name} at {riskEvent.timestamp} with risk level {riskEvent.riskLevel} and value {riskEvent.eventData}")
     
 
 # This just creates a Signal object from the CSV line
@@ -61,9 +66,7 @@ def process_signal(data):
 # Each time that a signal change is posted in the in-vehicle digital twin, the risk event detectors will be notified.
 # Each risk event detector has individual logic that decides if it should be triggered
 # In case the risk event detects a problem, it will post the notification in the callback
-def notify_risk_event_detectors(signal):
-    for riskEventDetector in riskEvenDetectortList:
-        riskEventDetector(signal, risk_event_callback)    
+
 
 # This method will read the recording file line by line, create a Signal object and notify the risk event detectors.
 # This will be replaced by listening to changes on the in-vehicle digital twin
@@ -72,18 +75,33 @@ def process_sample_file(filename):
     # Read the file as CSV, line by line
     with open(filename, newline='') as csvfile:
         
+        hist_signals = 10
+        timeout_dict = setup_timeout_dict(event_list)
+        signal_dict = setup_signal_dict(event_list)
+        
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         # Ignore the first line, which is the header
         next(reader)
         for row in reader:
             signal = process_signal(row)
-            notify_risk_event_detectors(signal)
+            if signal.name in signal_dict:
+                update_signal_value(signal_dict, signal, hist_signals)
+                if len(signal_dict[signal.name]) >= hist_signals:
+                    risk_event_detector(event_list, timeout_dict, signal, signal_dict, risk_event_callback)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Starts the sample process")
     parser.add_argument("-f", "--file", dest="file", help="Path to the file containing the recording.")
     args = parser.parse_args()
-
+    
+    event_list = [
+        event_definitions.speeding_start,
+        event_definitions.speeding_end,
+        event_definitions.cruise_control_activated,
+        event_definitions.cruise_control_deactivated,
+        ]
+    
     if(args.file):
         process_sample_file(args.file)
+
