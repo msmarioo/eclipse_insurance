@@ -89,19 +89,19 @@ speeding_start = EventDefinition(
             "method": False,
             "context_length": 1,
             "operator": "gt",
-            "value": 100
+            "value": 130
         },
         {   
             "signal_name": "Vehicle_Speed_Speed",
             "method": "prev",
             "context_length": 2,
             "operator": "lt",
-            "value": 100
+            "value": 130
         }
         ],
     eventData = {
-        "Vehicle_Speed_Speed": 1,
-        # "OdometerValue": 1
+        # Lets collect some speed information to understand what happens - sustained or a peak?
+        "Vehicle_Speed_Speed": 100,
         },
     timeout = 0
     )
@@ -116,19 +116,18 @@ speeding_end = EventDefinition(
             "method": False,
             "context_length": 1,
             "operator": "lt",
-            "value": 100
+            "value": 130
         },
         {   
             "signal_name": "Vehicle_Speed_Speed",
             "method": "prev",
             "context_length": 2,
             "operator": "gt",
-            "value": 100
+            "value": 130
         }
         ],
     eventData = {
         "Vehicle_Speed_Speed": 1,
-        # "OdometerValue": 1
         },
     timeout = 0
     )
@@ -144,7 +143,7 @@ cruise_control_activated = EventDefinition(
             "signal_name": "ADAS_CruiseControl_IsActive",
             "method": False,
             "context_length": 1,
-            "operator": "eg",
+            "operator": "eq",
             "value": 1
         },
         {   
@@ -157,7 +156,8 @@ cruise_control_activated = EventDefinition(
         ],
     eventData = {
         "ADAS_CruiseControl_IsActive": 1,
-        # "OdometerValue": 1
+        # Additional context information, at what speed is the cruise control activated?
+        "Vehicle_Speed_Speed": 20,       
         },
     timeout = 0
     )
@@ -184,9 +184,126 @@ cruise_control_deactivated = EventDefinition(
         ],
     eventData = {
         "ADAS_CruiseControl_IsActive": 1,
-        # "OdometerValue": 1
+        # Additional context information, at what speed is the cruise control activated?
+        "Vehicle_Speed_Speed": 20,        
         },
     timeout = 0
     )
 
 
+harsh_braking = EventDefinition(
+    name = "harsh_braking",
+    eventId = 3.1,
+    riskLevel = 1,
+    conditions =  [
+        {
+            "signal_name": "Vehicle_Acceleration_Longitudinal",
+            "method": False,
+            "context_length": 1,
+            "operator": "gt",
+            "value": -2
+        },
+        {   
+            "signal_name": "Vehicle_Acceleration_Longitudinal",
+            "method": "prev",
+            "context_length": 2,
+            "operator": "lt",
+            "value": -2
+        }
+        ],
+    eventData = {
+        # Additional context information
+        "Vehicle_Acceleration_Longitudinal": 20,
+        "Vehicle_Speed_Speed": 20,
+        # Lets collect data about the actions of the user, such as how hard the person is braking and any swerve for post analytics
+        "Chassis_Brake_Pressure": 20,
+        "Chassis_SteeringWheel_Angle": 20,
+        "Vehicle_Acceleration_Lateral": 20,
+        # Also lets collect some information about the car -Are the TCS and ABS system healthy and did they activate as part of the maneuver?
+        "ADAS_ABS_Error": 20,
+        "ADAS_ABS_IsEngaged": 20,
+        "ADAS_TCS_IsEngaged": 20,        
+        },
+    timeout = 0
+    )
+
+harsh_acceleration = EventDefinition(
+    name = "harsh_acceleration",
+    eventId = 3.2,
+    riskLevel = 1,
+    conditions =  [
+        {
+            "signal_name": "Vehicle_Acceleration_Longitudinal",
+            "method": False,
+            "context_length": 1,
+            "operator": "gt",
+            "value": 2
+        },
+        {   
+            "signal_name": "Vehicle_Acceleration_Longitudinal",
+            "method": "prev",
+            "context_length": 2,
+            "operator": "lt",
+            "value": 2
+        }
+        ],
+    eventData = {
+        # Additional context information
+        "Vehicle_Acceleration_Longitudinal": 20,
+        "Vehicle_Speed_Speed": 20,
+        # Lets collect data about the actions of the user, such as how hard the person is braking and any swerve for post analytics
+        "Chassis_Accelerator_PedalPosition": 20,
+        "Chassis_SteeringWheel_Angle": 20,
+        "Vehicle_Acceleration_Lateral": 20,
+        # Also lets collect some information about the car -Are the TCS and ABS system healthy and did they activate as part of the maneuver?
+        "ADAS_ABS_Error": 20,
+        "ADAS_ABS_IsEngaged": 20,
+        "ADAS_TCS_IsEngaged": 20,        
+        },
+    timeout = 0
+    )
+
+
+harsh_cornering = EventDefinition(
+    name = "harsh_cornering",
+    eventId = 3.3,
+    riskLevel = 1,
+    conditions =  [
+        {
+            "signal_name": "Vehicle_Acceleration_Lateral",
+            "method": False,
+            "context_length": 1,
+            "operator": "gt",
+            "value": 0.5
+        },
+        {   
+            "signal_name": "Vehicle_Acceleration_Lateral",
+            "method": "prev",
+            "context_length": 2,
+            "operator": "lt",
+            "value": 0.5
+        }
+        ],
+    eventData = {
+        # Additional context information: What were the G-Forces and what was the vehicle speed
+        "Vehicle_Acceleration_Lateral": 20,
+        "Vehicle_Acceleration_Longitudinal": 20,
+        "Vehicle_Speed_Speed": 20,
+        # Lets collect data about the harsh cornering, such as acceleration and braking profile, steering wheel angle and turn indicator used.
+        "Chassis_Brake_Pressure": 20,
+        "Chassis_Accelerator_PedalPosition": 20,
+        "Chassis_SteeringWheel_Angle": 20,
+        "Chassis_SteeringWheel_AngleSign": 20,
+        "Body_Lights_IsRightIndicatorOn": 20,
+        "Body_Lights_IsLeftIndicatorOn": 20,
+        # Also lets collect some information about the car: Did the TCS engage? and lets get the wheel speeds too!
+        "ADAS_TCS_IsEngaged": 20,
+        "Vehicle_Speed_Wheel_FrontLeft": 20,
+        "Vehicle_Speed_Wheel_FrontRight": 20,
+        "Vehicle_Speed_Wheel_RearLeft": 20,
+        "Vehicle_Speed_Wheel_RearRight": 20,
+        },
+    timeout = 0
+    )
+
+# 

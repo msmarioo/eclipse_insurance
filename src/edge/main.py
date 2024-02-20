@@ -100,6 +100,9 @@ if __name__ == "__main__":
         event_definitions.speeding_end,
         event_definitions.cruise_control_activated,
         event_definitions.cruise_control_deactivated,
+        event_definitions.harsh_braking,
+        event_definitions.harsh_acceleration,
+        event_definitions.harsh_cornering,
         ]
     
     if(args.file):
