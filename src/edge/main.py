@@ -16,12 +16,13 @@ import event_definitions
 def setup_timeout_dict(event_list):
     return {e.name:0 for e in event_list}
     
-def setup_signal_dict(event_list):
+def setup_signal_dict(event_dict):
     relevant_signals = []
-    for event in event_list:
+    for event in event_dict.values():
         relevant_signals = relevant_signals + event.relevant_signals
         relevant_signals = relevant_signals + list(event.eventData.keys())
-    relevant_signals = set(relevant_signals)
+    relevant_signals = list(set(relevant_signals))
+    relevant_signals = [x for x in relevant_signals if x not in event_dict.keys()]
     signal_dict = {}
     for s in relevant_signals:
         signal_dict[s] = []
@@ -40,6 +41,10 @@ def update_signal_value(signal_dict, signal, hist_signals):
 #     del signal_dict[signal.name][0]
 #     return signal_dict
 
+def reset_all_events(event_dict):
+    for event in event_dict.values():
+        event.running = False
+
 # Represents a vehicle signal.
 class Signal:
 
@@ -55,7 +60,7 @@ def post(riskEvent):
 
 # This is the callback from the risk event detectors
 def risk_event_callback(riskEvent):
-    print(f"Received a risk event {riskEvent.name} at {riskEvent.timestamp} with risk level {riskEvent.riskLevel} and value {riskEvent.eventData}")
+    print(f"Received a risk event {riskEvent.name} at {riskEvent.timestamp} with risk level {riskEvent.riskLevel} and start {riskEvent.eventData.get('start', False)}") #and {riskEvent.eventData}")
     
 
 # This just creates a Signal object from the CSV line
@@ -74,10 +79,9 @@ def process_sample_file(filename):
     
     # Read the file as CSV, line by line
     with open(filename, newline='') as csvfile:
-        
-        hist_signals = 10
-        timeout_dict = setup_timeout_dict(event_list)
-        signal_dict = setup_signal_dict(event_list)
+        hist_signals = 60
+        timeout_dict = setup_timeout_dict(event_dict.values())
+        signal_dict = setup_signal_dict(event_dict)
         
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         # Ignore the first line, which is the header
@@ -86,8 +90,9 @@ def process_sample_file(filename):
             signal = process_signal(row)
             if signal.name in signal_dict:
                 update_signal_value(signal_dict, signal, hist_signals)
-                if len(signal_dict[signal.name]) >= hist_signals:
-                    risk_event_detector(event_list, timeout_dict, signal, signal_dict, risk_event_callback)
+                risk_event_detector(event_dict, timeout_dict, signal, signal_dict, risk_event_callback)
+        reset_all_events(event_dict)
+        
 
 
 if __name__ == "__main__":
@@ -95,13 +100,22 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file", dest="file", help="Path to the file containing the recording.")
     args = parser.parse_args()
     
-    event_list = [
-        event_definitions.speeding_start,
-        event_definitions.speeding_end,
-        event_definitions.cruise_control_activated,
-        event_definitions.cruise_control_deactivated,
-        ]
+    event_dict = {
+        "speeding": event_definitions.speeding,
+        "massive_speeding": event_definitions.massive_speeding,
+        "cruise_control_activated": event_definitions.cruise_control_activated,
+        "tcs_activated": event_definitions.tcs_activated,
+        "esc_activated": event_definitions.esc_activated,
+        "performance_mode_activated": event_definitions.performance_mode_activated,
+        "autobahn": event_definitions.autobahn,
+        "traffic_jam": event_definitions.traffic_jam,
+        "no_seatbelt": event_definitions.no_seatbelt,
+        "harsh_braking": event_definitions.harsh_braking,
+        "harsh_acceleration": event_definitions.harsh_acceleration,
+        "harsh_cornering": event_definitions.harsh_cornering,
+        }
     
     if(args.file):
         process_sample_file(args.file)
+
 
