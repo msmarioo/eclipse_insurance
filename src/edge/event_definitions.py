@@ -144,7 +144,7 @@ cruise_control_activated = EventDefinition(
             "signal_name": "ADAS_CruiseControl_IsActive",
             "method": False,
             "context_length": 1,
-            "operator": "eg",
+            "operator": "eq",
             "value": 1
         },
         {   
