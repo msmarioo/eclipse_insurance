@@ -28,15 +28,21 @@ This code implements risk event detectors that categorize driving style.
 
 Each Risk event detector monitors vehicle signals everytime that they change, at a given refresh rate. The algorithm of each event detector varies - in some cases it requires analyzing previous data, or it can be a simple ramp up or ramp down threshold detection.
 
-Once an event is trigger, the event detector will capture additional signals before and after the event.
+Once an event is triggered, the event detector will capture additional signals before and after the event.
 
-The following is a list of potential detectors.
+## Threshold detectors
 
+The following events react on a flank up or flank down
 
 | Event             | Monitored Signals             |   Additional Captured Signals    |
 |-------------------|-------------------------------|-----------------------|
-| Speeding          | Speed, Speed Limit            | Position, Wheel Position Sensor, Accelerator Pedal Position, Brake Pedal Position |
-| Reckless Driving  | Longitudinal Acceleration, Lateral Acceleration | Position, Brake Pedal Position, Obstacle detection |
-| Rain              | Rain Intensity                | Position  |
-| Unsafe Lane Changes | Wheel Position Sensor, Speed, Turn Indication, Lane Departure Warning | Position, Speed, Wheel Position Sensor, Turn Indication |
-| Tailgaiting       | Speed, Obstacle Position      | Accelerator Pedal Position, Brake Pedal Position, Longitudinal and Lateral Acceleration, Wheel Position Sensor |
+| speeding_start | Vehicle Speed    | 
+| speeding_end | Vehicle Speed |
+| cruise_control_activated |ADAS_CruiseControl_IsActive | Vehicle Speed
+| cruise_control_deactivated | ADAS_CruiseControl_IsActive | Vehicle Speed
+| harsh_braking | Vehicle_Acceleration_Lateral | Vehicle Acceleration Longitudinal / Lateral, Speed, Brake Pressure, Steering Wheel Angle, ADAS ABS Error, ADAS ABS Is Engaged, ADAS TCS IsEngaged
+| harsh_acceleration | Vehicle_Acceleration_Lateral | Vehicle Acceleration Longitudinal / Lateral, Speed, Accelerator Pedal Position, Steering Wheel Angle, ADAS ABS Error, ADAS ABS Is Engaged, ADAS TCS IsEngaged
+| harsh_cornering | Vehicle_Acceleration_Longitudinal | Vehicle Acceleration Longitudinal / Lateral, Speed, Brake Pressure, Accelerator Pedal Position, Steering Wheel Angle, Steering Wheel Angle Sign, Left Turn Light Indicator, Right Turn Light Indicator, ADAS TCS IsEngaged. Vehicle Speed Wheel Front Left / Front Right / Rear Left / Rear Right
+
+
+
