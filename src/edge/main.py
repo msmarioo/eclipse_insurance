@@ -71,7 +71,6 @@ def save_events_to_disk(event_list_to_save):
 # This is the callback from the risk event detectors
 def risk_event_callback(riskEvent):
     print(f"Received a risk event {riskEvent.name} at {riskEvent.timestamp} with risk level {riskEvent.riskLevel} and start {riskEvent.eventData.get('start', False)}") #and {riskEvent.eventData}")
-    post(riskEvent)
     
 
 # This just creates a Signal object from the CSV line
@@ -100,7 +99,6 @@ def process_sample_file(filename):
         for row in reader:
             signal = process_signal(row)
             if signal.name in signal_dict:
-                #print(f"Processing signal {signal.name} with value {signal.value} at {signal.timestamp}")
                 update_signal_value(signal_dict, signal, hist_signals)
                 risk_event_detector(event_dict, timeout_dict, signal, signal_dict, risk_event_callback)
         reset_all_events(event_dict)

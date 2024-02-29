@@ -21,9 +21,6 @@
 *.drawio.bkp
 **/target
 .vscode
-.venv
-data/*
-.devcontainer
 
 config/
 *.env
