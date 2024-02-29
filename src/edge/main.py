@@ -1,20 +1,17 @@
 import argparse
-import csv, json
+import csv
 
 from event_detector import risk_event_detector
 import event_definitions
 
 
-# This script is a very basic simulation of the sequence of events to detect risk events in a vehicle.
+# This script is a very basic simulation of the seuence of events to detect risk events in a vehicle.
 # 
 # - Vehicle posts signal changes periodically, at a 10-100ms update rate.
 # - For each signal change, the risk event detectors are notified
 # - Risk event detectors will use the signal change to evaluate a risk event
 # - If a risk event is detected, a Risk Event is created and posted
 # - Risk event is transmitted to the cloud
-
-# Declare the events as an empty array to collect the risk events and save it to disk
-event_list_to_save = []
 
 def setup_timeout_dict(event_list):
     return {e.name:0 for e in event_list}
@@ -59,19 +56,11 @@ class Signal:
 
 # Here we will showcase the telemetry platform part - which is basically just serializing the risk event and sending it to the cloud
 def post(riskEvent):    
-    print("Posting risk event to cloud, eventually") 
-    print(json.dumps(riskEvent.__dict__)) 
-    risk_event_json = json.dumps(riskEvent.__dict__)
-    event_list_to_save.append(risk_event_json)
-
-def save_events_to_disk(event_list_to_save):
-    with open('./data/out/risk_events.json', 'w') as f:
-        json.dump(event_list_to_save, f)    
+    print("Posting risk event to cloud, eventually")  
 
 # This is the callback from the risk event detectors
 def risk_event_callback(riskEvent):
     print(f"Received a risk event {riskEvent.name} at {riskEvent.timestamp} with risk level {riskEvent.riskLevel} and start {riskEvent.eventData.get('start', False)}") #and {riskEvent.eventData}")
-    post(riskEvent)
     
 
 # This just creates a Signal object from the CSV line
@@ -100,7 +89,6 @@ def process_sample_file(filename):
         for row in reader:
             signal = process_signal(row)
             if signal.name in signal_dict:
-                #print(f"Processing signal {signal.name} with value {signal.value} at {signal.timestamp}")
                 update_signal_value(signal_dict, signal, hist_signals)
                 risk_event_detector(event_dict, timeout_dict, signal, signal_dict, risk_event_callback)
         reset_all_events(event_dict)
@@ -129,8 +117,3 @@ if __name__ == "__main__":
     
     if(args.file):
         process_sample_file(args.file)
-        print("Saving the detected events in json format")
-        save_events_to_disk(event_list_to_save)
-
-
-
