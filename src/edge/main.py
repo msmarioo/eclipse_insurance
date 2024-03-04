@@ -117,5 +117,3 @@ if __name__ == "__main__":
     
     if(args.file):
         process_sample_file(args.file)
-
-
