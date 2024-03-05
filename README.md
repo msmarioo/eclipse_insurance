@@ -20,6 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 # Description
+
 The [Eclipse SDV Blueprints](https://github.com/eclipse-sdv-blueprints) project is a collaborative initiative
 led by Eclipse SDV members to bring the *software defined vehicle* concepts to life.
 
@@ -40,4 +41,4 @@ The code is organized in three parts:
 
 - [Edge](./src/edge/README.md) contains examples for risk event detectors.
 - *Telematics Platform* contains examples to receive vehicle data, store it and process it as a data product.
-- *Insurance Platform* showcases consumption of data using *Eclipse Dataspaces*
+- [Insurance Platform](./src/edc/README.md) showcases consumption of data using *Eclipse Dataspaces*
