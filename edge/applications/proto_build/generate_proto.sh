@@ -1,6 +1,4 @@
 
-# To use this script, set the ORCHESTRATION_REPO variable
-# e.g. export ORCHESTRATION_REPO=~/repos/maestro-challenge/in-vehicle-stack/interfaces
 
 # Generates the proto interface for the in-vehicle digital twin
 python -m grpc_tools.protoc --proto_path ${ORCHESTRATION_REPO} --python_out=. --grpc_python_out=. ${ORCHESTRATION_REPO}/invehicle_digital_twin/v1/invehicle_digital_twin.proto
