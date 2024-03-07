@@ -1,1 +1,5 @@
 numpy
+grpcio
+grpcio-tools
+protobuf
+six
