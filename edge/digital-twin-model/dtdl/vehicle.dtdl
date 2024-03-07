@@ -1,0 +1,10 @@
+[
+    {
+      "@context": ["dtmi:dtdl:context;3"],
+      "@type": "Interface",
+      "@id": "dtmi:sdv:Vehicle;1",
+      "description": "Passenger Car",
+      "contents": [
+      ]
+    }
+]
