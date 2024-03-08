@@ -28,8 +28,7 @@
             "@type": "Property",
             "@id": "dtmi:Chassis:SteeringWheel:AngleSign;1",
             "name": "Chassis_SteeringWheel_AngleSign",
-            "schema": "double",
-            "unit": "Degree"
+            "schema": "integer"
         },
         {
             "@type": "Property",
