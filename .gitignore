@@ -23,7 +23,6 @@
 .vscode
 .venv
 data/*
-.devcontainer
 
 config/
 *.env

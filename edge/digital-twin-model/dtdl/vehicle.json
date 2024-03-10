@@ -1,0 +1,298 @@
+{
+    "@type": "Interface",
+    "@id": "dtmi:sdv:Vehicle;1",
+    "description": "Vehicle Signals using the COVESA Signal Specification",
+    "contents": [
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:ESC:IsEngaged;1",
+            "name": "ADAS_ESC_IsEngaged",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:TCS:IsEngaged;1",
+            "name": "ADAS_TCS_IsEngaged",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:ABS:IsEngaged;1",
+            "name": "ADAS_ABS_IsEngaged",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Chassis:SteeringWheel:AngleSign;1",
+            "name": "Chassis_SteeringWheel_AngleSign",
+            "schema": "integer"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Speed:Wheel:RearRight;1",
+            "name": "Vehicle_Speed_Wheel_RearRight",
+            "schema": "double",
+            "unit": "KiloMeterPerHour"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Speed:Wheel:FrontLeft;1",
+            "name": "Vehicle_Speed_Wheel_FrontLeft",
+            "schema": "double",
+            "unit": "KiloMeterPerHour"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Speed:Wheel:RearLeft;1",
+            "name": "Vehicle_Speed_Wheel_RearLeft",
+            "schema": "double",
+            "unit": "KiloMeterPerHour"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Chassis:SteeringWheel:Angle;1",
+            "name": "Chassis_SteeringWheel_Angle",
+            "schema": "double",
+            "unit": "DegreOfArc"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Drivetrain:InternalCombustionEngine:RPM;1",
+            "name": "Drivetrain_InternalCombustionEngine_RPM",
+            "schema": "double",
+            "unit": "MinutInver"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Acceleration:Lateral;1",
+            "name": "Vehicle_Acceleration_Lateral",
+            "schema": "double",
+            "unit": "ForceOfGravi"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:TCS:IsActive;1",
+            "name": "ADAS_TCS_IsActive",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Chassis:Brake:Pressure;1",
+            "name": "Chassis_Brake_Pressure",
+            "schema": "double",
+            "unit": "Bar"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:AngularVelocity:YawSign;1",
+            "name": "Vehicle_AngularVelocity_YawSign",
+            "schema": "integer"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Speed:Wheel:FrontRight;1",
+            "name": "Vehicle_Speed_Wheel_FrontRight",
+            "schema": "double",
+            "unit": "KiloMeterPerHour"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:ESC:IsActive;1",
+            "name": "ADAS_ESC_IsActive",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:AngularVelocity:Yaw;1",
+            "name": "Vehicle_AngularVelocity_Yaw",
+            "schema": "double",
+            "unit": "DegreOfArcPerSecon"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Acceleration:Longitudinal;1",
+            "name": "Vehicle_Acceleration_Longitudinal",
+            "schema": "double",
+            "unit": "MeterPerSeconSquar"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Drivetrain:Transmission:Gear;1",
+            "name": "Drivetrain_Transmission_Gear",
+            "schema": "integer"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Chassis:Accelerator:PedalPosition;1",
+            "name": "Chassis_Accelerator_PedalPosition",
+            "schema": "double",
+            "unit": "PerCent"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Chassis:ParkingBrake:IsEngaged;1",
+            "name": "Chassis_ParkingBrake_IsEngaged",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Chassis:Brake:Pressed;1",
+            "name": "Chassis_Brake_Pressed",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Drivetrain:InternalCombustionEngine:Power;1",
+            "name": "Drivetrain_InternalCombustionEngine_Power",
+            "schema": "double",
+            "unit": "KiloWatt"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Seat:Switch:IsBelted;1",
+            "name": "Seat_Switch_IsBelted",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:ABS:Error;1",
+            "name": "ADAS_ABS_Error",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:Speed:Speed;1",
+            "name": "Vehicle_Speed_Speed",
+            "schema": "double",
+            "unit": "KiloMeterPerHour"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:ADAS:CruiseControl:IsActive;1",
+            "name": "ADAS_CruiseControl_IsActive",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Vehicle:IgnitionOn;1",
+            "name": "Vehicle_IgnitionOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Drivetrain:FuelSystem:InstantConsumption;1",
+            "name": "Drivetrain_FuelSystem_InstantConsumption",
+            "schema": "double",
+            "unit": "LiterPerHour"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Cabin:Infotainment:Navigation:LongitudeDirection;1",
+            "name": "Cabin_Infotainment_Navigation_LongitudeDirection",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsBackupOn;1",
+            "name": "Body_Lights_IsBackupOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Cabin:Infotainment:Navigation:LatitudeDirection;1",
+            "name": "Cabin_Infotainment_Navigation_LatitudeDirection",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Drivetrain:Transmission:PerformanceMode;1",
+            "name": "Drivetrain_Transmission_PerformanceMode",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsRearFogOn;1",
+            "name": "Body_Lights_IsRearFogOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsParkingOn;1",
+            "name": "Body_Lights_IsParkingOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Cabin:Infotainment:Navigation:Latitude;1",
+            "name": "Cabin_Infotainment_Navigation_Latitude",
+            "schema": "double",
+            "unit": "DegreOfArc"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Cabin:Infotainment:Navigation:Longitude;1",
+            "name": "Cabin_Infotainment_Navigation_Longitude",
+            "schema": "double",
+            "unit": "DegreOfArc"
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsRightIndicatorOn;1",
+            "name": "Body_Lights_IsRightIndicatorOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsLeftIndicatorOn;1",
+            "name": "Body_Lights_IsLeftIndicatorOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsHazardOn;1",
+            "name": "Body_Lights_IsHazardOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Body:Lights:IsBrakeOn;1",
+            "name": "Body_Lights_IsBrakeOn",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Axle:Brake:FluidLevelLow;1",
+            "name": "Axle_Brake_FluidLevelLow",
+            "schema": "boolean",
+            "unit": ""
+        },
+        {
+            "@type": "Property",
+            "@id": "dtmi:Axle:Brake:BrakesWorn;1",
+            "name": "Axle_Brake_BrakesWorn",
+            "schema": "boolean",
+            "unit": ""
+        }
+    ]
+}
