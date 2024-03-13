@@ -39,6 +39,6 @@ The telematics platform (representing a vehicle OEM) stores all insurance events
 
 The code is organized in three parts:
 
-- [Edge](./src/edge/README.md) contains examples for risk event detectors.
+- [Edge](./edge/README.md) contains examples for risk event detectors and integration with the Eclipse Orchestration Blueprint
 - *Telematics Platform* contains examples to receive vehicle data, store it and process it as a data product.
 - [Insurance Platform](./src/edc/README.md) showcases consumption of data using *Eclipse Dataspaces*

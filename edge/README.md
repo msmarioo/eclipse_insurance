@@ -22,15 +22,13 @@ SPDX-License-Identifier: Apache-2.0
 
 This code implements risk event detectors that categorize driving style.
 
-![Edge Overview](../../docs/images/edge-overview.png)
+![Edge Overview](/docs/images/edge-overview.svg)
 
-# Risk Events Detector
+## Risk Events Detector
 
 Each Risk event detector monitors vehicle signals everytime that they change, at a given refresh rate. The algorithm of each event detector varies - in some cases it requires analyzing previous data, or it can be a simple ramp up or ramp down threshold detection.
 
 Once an event is triggered, the event detector will capture additional signals before and after the event.
-
-## Threshold detectors
 
 The following events react on a flank up or flank down
 
@@ -44,4 +42,18 @@ The following events react on a flank up or flank down
 | harsh_acceleration | Vehicle_Acceleration_Lateral | Vehicle Acceleration Longitudinal / Lateral, Speed, Accelerator Pedal Position, Steering Wheel Angle, ADAS ABS Error, ADAS ABS Is Engaged, ADAS TCS IsEngaged
 | harsh_cornering | Vehicle_Acceleration_Longitudinal | Vehicle Acceleration Longitudinal / Lateral, Speed, Brake Pressure, Accelerator Pedal Position, Steering Wheel Angle, Steering Wheel Angle Sign, Left Turn Light Indicator, Right Turn Light Indicator, ADAS TCS IsEngaged. Vehicle Speed Wheel Front Left / Front Right / Rear Left / Rear Right
 
+## Integration with Orchestration Blueprint
 
+The Insurance Event Detector uses charriot to discover the digital twin service. It will collect all necessary signals and use the digital twin service to detemrine if they exist. Once the signals are discovered, it will use the managed subscribed (through the digital twin service) to read the metadata and connect.
+
+![Edge Overview](/docs/images/eclipse-orchestration-integration.svg)
+
+To provide simulation, a vehicle provider will register signals (described in a DTDL file) and provide updates using a sample CSV file. The CSV file has the following structure:
+
+``` csv
+source_id, signal, timestamp, value
+"b7ed5744-8715-4b3d-a322-7c7e0c399f69","Vehicle_Speed_Wheel_RearLeft","142.785732","53.715"
+"b7ed5744-8715-4b3d-a322-7c7e0c399f69","Vehicle_Speed_Wheel_FrontRight","142.785732","54.3975"
+"b7ed5744-8715-4b3d-a322-7c7e0c399f69","Vehicle_Speed_Wheel_FrontLeft","142.785732","53.685"
+"b7ed5744-8715-4b3d-a322-7c7e0c399f69","Vehicle_Speed_Wheel_RearRight","142.785732","54.225"
+```
