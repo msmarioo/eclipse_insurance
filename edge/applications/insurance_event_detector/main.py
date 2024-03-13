@@ -4,7 +4,6 @@ import csv
 from event_detector import risk_event_detector
 import event_definitions
 
-
 # This script is a very basic simulation of the seuence of events to detect risk events in a vehicle.
 # 
 # - Vehicle posts signal changes periodically, at a 10-100ms update rate.
