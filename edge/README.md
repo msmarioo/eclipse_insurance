@@ -91,4 +91,14 @@ follow the instructions to run the base workloads using the run_maestro.sh scrip
 
 Once this is running it is possible to run the vehicle_provider and the insurance_event_detector applications
 
+As an example, assuming that the folder .sampledata contains a file harshdriving_1_bf827518de5942aea7727c064dcd381e.csv as a recording, the following calls will register the digital twin, start the insurance application and then start the replay.
 
+```bash
+
+python -m digital_twin_providers.vehicle_properties_provider.main -t ./digital-twin-model/dtdl/vehicle.json
+
+python -m  applications.insurance_event_detector.main -f ../.sampledata/harshdriving_1_bf827518de5942aea7727c064dcd381e.csv
+
+python -m digital_twin_providers.vehicle_properties_provider.main -r ../.sampledata/harshdriving_1_bf827518de5942aea7727c064dcd381e.csv
+
+```
