@@ -130,12 +130,9 @@ def start(requiredSignalIDs: list):
         signal = findSignalByID(signalID, digitalTwinServiceMetadata)
         subscribe(signal)
 
-
-    mqttClient.loop_forever()
-
-
 if __name__ == "__main__":
     start(collectRequiredSignalIDs())
+    mqttClient.loop_forever()
 
 
     

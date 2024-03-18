@@ -1,5 +1,6 @@
 import argparse
 import csv
+import time
 
 from applications.insurance_event_detector.event_detector import risk_event_detector
 from applications.insurance_event_detector import event_definitions
@@ -69,6 +70,11 @@ def risk_event_callback(riskEvent):
 def process_signal(data):
     return Signal(data[1], float(data[3]), float(data[2]))
 
+def process_mqtt_signal(data):
+    topic = data.topic.replace("/", "_")
+    return Signal(topic, float(data.payload), float(time.time() * 1000))
+
+
 # Each time that a signal change is posted in the in-vehicle digital twin, the risk event detectors will be notified.
 # Each risk event detector has individual logic that decides if it should be triggered
 # In case the risk event detects a problem, it will post the notification in the callback
@@ -96,6 +102,36 @@ def process_sample_file(filename):
         
 
 
+
+def on_message(client, userdata, msg):
+    #print(f"Received message {msg.payload} on topic {msg.topic}")
+
+    hist_signals = 60
+    signal = process_mqtt_signal(msg)
+
+    if signal.name in signal_dict:
+        update_signal_value(signal_dict, signal, hist_signals)
+        risk_event_detector(event_dict, timeout_dict, signal, signal_dict, risk_event_callback)
+
+
+def process_vehicle_integration():
+        
+    # Make the ids compatible with DTDL
+    collectedSignals = [ ("dtmi:" + element.replace("_", ":") + ";1") for element in signal_dict.keys()]
+
+    print(f"{collectedSignals}")
+
+    consumer.start(collectedSignals)
+
+    consumer.mqttClient.on_message = on_message
+
+    consumer.mqttClient.loop_forever()
+
+
+event_dict = {}
+timeout_dict = {}
+signal_dict = {}
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Starts the sample process")
     parser.add_argument("-f", "--file", dest="file", help="Path to the file containing the recording.")
@@ -116,5 +152,11 @@ if __name__ == "__main__":
         "harsh_cornering": event_definitions.harsh_cornering,
         }
     
+    timeout_dict = setup_timeout_dict(event_dict.values())
+    signal_dict = setup_signal_dict(event_dict)
+
     if(args.file):
         process_sample_file(args.file)
+    else:
+        process_vehicle_integration()
+        
