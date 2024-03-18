@@ -21,8 +21,8 @@ SPDX-License-Identifier: Apache-2.0
 from contextlib import closing
 
 import grpc
-import service_discovery.v1.service_registry_pb2 as service_registry_pb2
-import service_discovery.v1.service_registry_pb2_grpc as service_registry_pb2_grpc
+import proto_build.service_discovery.v1.service_registry_pb2 as service_registry_pb2
+import proto_build.service_discovery.v1.service_registry_pb2_grpc as service_registry_pb2_grpc
 
 import paho.mqtt.client as mqtt
 

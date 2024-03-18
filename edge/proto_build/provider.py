@@ -24,7 +24,7 @@ import argparse
 
 import grpc
 
-from common import discoverDigitalTwinService
+from proto_build.common import discoverDigitalTwinService
 
 import invehicle_digital_twin.v1.invehicle_digital_twin_pb2 as invehicle_digital_twin_pb2
 import invehicle_digital_twin.v1.invehicle_digital_twin_pb2_grpc as invehicle_digital_twin_pb2_grpc
@@ -101,7 +101,7 @@ def sendData(recordingFile):
 
     mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, protocol=mqtt.MQTTv5, client_id="provider")
     mqttClient.on_connect = on_connect
-    mqttClient.on_publish = on_publish
+#    mqttClient.on_publish = on_publish
 
     mqttClient.connect(MQTT_SERVER, MQTT_PORT, 60)
 
@@ -122,7 +122,7 @@ def sendData(recordingFile):
             sleepTime = timestamp - previoustimestamp
             time.sleep(sleepTime)
             print(f"Publishing {data} to {topic} with timestamp {timestamp} and sleep time {sleepTime} s")
-            ret, mid = mqttClient.publish(topic, data, qos=1)
+            ret, mid = mqttClient.publish(topic, data, qos=0)
             
             previoustimestamp = timestamp
 

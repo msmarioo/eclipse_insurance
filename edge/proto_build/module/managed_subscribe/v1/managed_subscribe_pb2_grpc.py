@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from module.managed_subscribe.v1 import managed_subscribe_pb2 as module_dot_managed__subscribe_dot_v1_dot_managed__subscribe__pb2
+from proto_build.module.managed_subscribe.v1 import managed_subscribe_pb2 as module_dot_managed__subscribe_dot_v1_dot_managed__subscribe__pb2
 
 
 class ManagedSubscribeStub(object):

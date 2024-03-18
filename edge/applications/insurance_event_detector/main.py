@@ -1,8 +1,10 @@
 import argparse
 import csv
 
-from event_detector import risk_event_detector
-import event_definitions
+from applications.insurance_event_detector.event_detector import risk_event_detector
+from applications.insurance_event_detector import event_definitions
+
+from proto_build import consumer
 
 # This script is a very basic simulation of the seuence of events to detect risk events in a vehicle.
 # 

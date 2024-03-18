@@ -22,13 +22,13 @@ from contextlib import closing
 
 import grpc
 
-from common import discoverDigitalTwinService
+from proto_build.common import discoverDigitalTwinService
 
-import invehicle_digital_twin.v1.invehicle_digital_twin_pb2 as invehicle_digital_twin_pb2
-import invehicle_digital_twin.v1.invehicle_digital_twin_pb2_grpc as invehicle_digital_twin_pb2_grpc
+import proto_build.invehicle_digital_twin.v1.invehicle_digital_twin_pb2 as invehicle_digital_twin_pb2
+import proto_build.invehicle_digital_twin.v1.invehicle_digital_twin_pb2_grpc as invehicle_digital_twin_pb2_grpc
 
-import module.managed_subscribe.v1.managed_subscribe_pb2 as managed_subscribe_pb2
-import module.managed_subscribe.v1.managed_subscribe_pb2_grpc as managed_subscribe_pb2_grpc
+import proto_build.module.managed_subscribe.v1.managed_subscribe_pb2 as managed_subscribe_pb2
+import proto_build.module.managed_subscribe.v1.managed_subscribe_pb2_grpc as managed_subscribe_pb2_grpc
 
 import paho.mqtt.client as mqtt
 
@@ -123,20 +123,19 @@ def on_message(client, userdata, msg):
     print(f"Received message {msg.payload} on topic {msg.topic}")
 
 
-if __name__ == "__main__":
-
+def start(requiredSignalIDs: list):
     digitalTwinServiceMetadata = discoverDigitalTwinService()
-
-    requiredSignalIDs = collectRequiredSignalIDs()
 
     for signalID in requiredSignalIDs:
         signal = findSignalByID(signalID, digitalTwinServiceMetadata)
-        #subscriptionInfo = getSubscriptionInfo(signal)
-        #subscribe(subscriptionInfo)
         subscribe(signal)
 
 
     mqttClient.loop_forever()
+
+
+if __name__ == "__main__":
+    start(collectRequiredSignalIDs())
 
 
     
