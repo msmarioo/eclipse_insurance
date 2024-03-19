@@ -21,17 +21,14 @@ SPDX-License-Identifier: Apache-2.0
 from contextlib import closing
 
 import grpc
-import service_discovery.v1.service_registry_pb2 as service_registry_pb2
-import service_discovery.v1.service_registry_pb2_grpc as service_registry_pb2_grpc
 
-from common import discoverDigitalTwinService
+from proto_build.common import discoverDigitalTwinService
 
-import invehicle_digital_twin.v1.invehicle_digital_twin_pb2 as invehicle_digital_twin_pb2
-import invehicle_digital_twin.v1.invehicle_digital_twin_pb2_grpc as invehicle_digital_twin_pb2_grpc
+import proto_build.invehicle_digital_twin.v1.invehicle_digital_twin_pb2 as invehicle_digital_twin_pb2
+import proto_build.invehicle_digital_twin.v1.invehicle_digital_twin_pb2_grpc as invehicle_digital_twin_pb2_grpc
 
-
-import module.managed_subscribe.v1.managed_subscribe_pb2 as managed_subscribe_pb2
-import module.managed_subscribe.v1.managed_subscribe_pb2_grpc as managed_subscribe_pb2_grpc
+import proto_build.module.managed_subscribe.v1.managed_subscribe_pb2 as managed_subscribe_pb2
+import proto_build.module.managed_subscribe.v1.managed_subscribe_pb2_grpc as managed_subscribe_pb2_grpc
 
 import paho.mqtt.client as mqtt
 
@@ -45,10 +42,13 @@ mqttClient = None
 
 def collectRequiredSignalIDs() -> list:
     #return ["dtmi:sdv:Trailer:Weight;1", "dtmi:sdv:Trailer:IsTrailerConnected;1"]
-    return ["dtmi:sdv:Trailer:Weight;1"]
+    return ["dtmi:Vehicle:Speed:Speed;1", "dtmi:Drivetrain:InternalCombustionEngine:RPM;1"]
 
 
-def findSignalByID(signalID, digitalTwinServiceMetadata) -> invehicle_digital_twin_pb2.EntityAccessInfo:  
+def findSignalByID(signalID, digitalTwinServiceMetadata) -> invehicle_digital_twin_pb2.EntityAccessInfo:
+    '''
+        Find a signal by its ID in the Digital Twin Service
+    '''
 
     print(f"Finding signal {signalID} in Digital Twin Service {digitalTwinServiceMetadata.name} at {digitalTwinServiceMetadata.uri}")
 
@@ -91,6 +91,17 @@ def subscribe(subscriptionInfo):
         mqttClient.subscribe(subscriptionInfo.context)
     
 
+def subscribe(signal: invehicle_digital_twin_pb2.EntityAccessInfo):
+
+    print(f"Subscribing to signal {signal.name} with ID {signal.id}")
+    
+    endpointInfo = signal.endpointInfoList[0]
+
+    if (endpointInfo.protocol == "mqtt_v5"):
+        startClient(endpointInfo)
+        mqttClient.subscribe(endpointInfo.context)
+
+
 def startClient(subscriptionInfo):
     global mqttClient
     if (mqttClient == None):
@@ -98,35 +109,29 @@ def startClient(subscriptionInfo):
         mqttClient.on_connect = on_connect
         mqttClient.on_message = on_message
 
-
         # Extract the address and the port from a string with the form  "mqtt://0.0.0.0:1883"
         address = subscriptionInfo.uri.split("//")[1].split(":")[0]
         port = int(subscriptionInfo.uri.split("//")[1].split(":")[1])
 
         mqttClient.connect(address, port, 60)
-        mqttClient.loop_start()
-
 
 
 def on_connect(client, userdata, flags, rc, properties):
     print(f"Connected to MQTT broker with result code {rc}")
 
 def on_message(client, userdata, msg):
-    print("Received message: " + msg.payload.decode())
+    print(f"Received message {msg.payload} on topic {msg.topic}")
 
 
-if __name__ == "__main__":
-
+def start(requiredSignalIDs: list):
     digitalTwinServiceMetadata = discoverDigitalTwinService()
-
-    requiredSignalIDs = collectRequiredSignalIDs()
 
     for signalID in requiredSignalIDs:
         signal = findSignalByID(signalID, digitalTwinServiceMetadata)
-        subscriptionInfo = getSubscriptionInfo(signal)
-        subscribe(subscriptionInfo)
+        subscribe(signal)
 
-
+if __name__ == "__main__":
+    start(collectRequiredSignalIDs())
     mqttClient.loop_forever()
 
 

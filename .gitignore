@@ -27,5 +27,7 @@ data/*
 config/
 *.env
 
+.sampledata
+
 # Python
 __pycache__/

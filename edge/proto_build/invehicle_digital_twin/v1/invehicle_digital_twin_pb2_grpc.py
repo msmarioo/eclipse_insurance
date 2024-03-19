@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from invehicle_digital_twin.v1 import invehicle_digital_twin_pb2 as invehicle__digital__twin_dot_v1_dot_invehicle__digital__twin__pb2
+from proto_build.invehicle_digital_twin.v1 import invehicle_digital_twin_pb2 as invehicle__digital__twin_dot_v1_dot_invehicle__digital__twin__pb2
 
 
 class InvehicleDigitalTwinStub(object):

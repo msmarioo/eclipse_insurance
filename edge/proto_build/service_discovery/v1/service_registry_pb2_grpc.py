@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from service_discovery.v1 import service_registry_pb2 as service__discovery_dot_v1_dot_service__registry__pb2
+from proto_build.service_discovery.v1 import service_registry_pb2 as service__discovery_dot_v1_dot_service__registry__pb2
 
 
 class ServiceRegistryStub(object):
